@@ -1,0 +1,15 @@
+run:
+  timeout: 5m
+
+linters:
+  enable:
+    - errcheck
+    - govet
+    - staticcheck
+    - gosec
+
+issues:
+  exclude-rules:
+    - path: internal/provider/
+      linters:
+        - gosec
