@@ -14,22 +14,19 @@ PREFIX ?= /usr/local
 BINDIR := $(PREFIX)/bin
 UNITDIR := $(PREFIX)/lib/systemd/system
 
-.PHONY: all build fakeprovider test lint integration run install uninstall release clean
+.PHONY: all build test lint integration run install uninstall release clean
 
 all: build
 
 # cgo is required to talk to libprobeme; every target below runs with CGO_ENABLED=1.
-build: fakeprovider
+build:
 	@pkg-config --cflags --libs probeme >/dev/null 2>&1 || { \
 		echo "error: pkg-config probeme failed; install libprobeme (cmake --install) and set PKG_CONFIG_PATH" >&2; \
 		exit 1; \
 	}
 	CGO_ENABLED=1 $(GO) build -trimpath -ldflags "$(LDFLAGS)" -o $(BINARY) ./cmd/probeme-mothership
 
-fakeprovider:
-	./test/fakeprovider/build.sh
-
-test: fakeprovider
+test:
 	CGO_ENABLED=0 $(GO) build ./...
 	CGO_ENABLED=0 $(GO) test ./internal/metrics/
 	CGO_ENABLED=1 $(GO) test -race ./...
@@ -59,4 +56,4 @@ release:
 	./scripts/release.sh $(VERSION)
 
 clean:
-	rm -rf bin test/fakeprovider/build release
+	rm -rf bin release

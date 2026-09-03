@@ -32,7 +32,7 @@ loads `libprobeme_*.so` providers, ticks `collect_all` and exposes
 ## Design notes
 
 - `internal/provider/cgo.go` is the only file that imports "C"; everything above sees plain Go structs. The libprobeme ABI (major 1) is frozen.
-- Providers are `dlopen`ed at startup (`--providers=a.so,b.so`, else glob `${PME_PROVIDER_DIR:-/usr/lib/probeme}/libprobeme_*.so`); first provider to claim a capability wins.
+- Providers are `dlopen`ed at startup (`--providers=a.so,b.so`, else glob `${PME_PROVIDER_DIR:-/usr/local/lib}/libprobeme_*.so`); first provider to claim a capability wins.
 - A 5s timer tick calls every provider into one C buffer (`--probe.timeout=3s`); ticks never overlap — a stalled call is abandoned and ticks skip until it returns. The result is copied into a Go snapshot and published via `atomic.Pointer` (latest wins).
 - `/metrics` serves the last published snapshot as const metrics — no collect-on-scrape, no sample timestamps. `/-/ready` returns 503 until the first successful publish.
 - Exit codes: 0 clean, 1 config/startup error, 2 no provider with `--require-provider`.
@@ -47,7 +47,7 @@ loads `libprobeme_*.so` providers, ticks `collect_all` and exposes
 
 ```
 make build          # builds the fake test provider too
-./bin/probeme-mothership --providers=/usr/lib/probeme/libprobeme_linux.so
+./bin/probeme-mothership --providers=/usr/local/lib/libprobeme_linux.so
 curl -s localhost:9167/metrics | head
 ```
 
@@ -67,5 +67,5 @@ sudo systemctl enable --now probeme-mothership
 ```
 make test           # go test -race ./... + CGO_ENABLED=0 build check
 make integration    # boots the binary with the fake provider, promtool check
-make run PROVIDERS=/usr/lib/probeme/libprobeme_linux.so
+make run PROVIDERS=/usr/local/lib/libprobeme_linux.so
 ```

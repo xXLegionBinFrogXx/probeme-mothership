@@ -58,7 +58,7 @@ func Load(args []string) (*Config, bool, error) {
 
 	fs.BoolVar(&versionFlag, "version", false, "print version and exit")
 	fs.StringVar(&providers, "providers", envOr("PME_PROVIDERS", ""), "comma-separated provider .so paths; overrides provider.dir discovery")
-	fs.StringVar(&providerDir, "provider.dir", envOr("PME_PROVIDER_DIR", "/usr/lib/probeme"), "directory globbed for libprobeme_*.so (env PME_PROVIDER_DIR)")
+	fs.StringVar(&providerDir, "provider.dir", envOr("PME_PROVIDER_DIR", "/usr/local/lib"), "directory globbed for libprobeme_*.so (env PME_PROVIDER_DIR)")
 	fs.BoolVar(&requireProvider, "require-provider", envBool("PME_REQUIRE_PROVIDER", false), "exit 2 when no usable provider is found")
 
 	if err := fs.Parse(args); err != nil {
