@@ -4,9 +4,12 @@
   <img src="assets/logo.png" alt="Mothership — probe me" width="320">
 </p>
 
-One consumer of [`libprobeme`](https://github.com/xXLegionBinFrogXx/libprobeme):
-loads `libprobeme_*.so` providers, ticks `collect_all` and exposes
-`node_*` / `DCGM_FI_DEV_*` / `pme_*` series on `/metrics`.
+A small Prometheus exporter: a lightweight Go daemon that serves host and GPU
+metrics on a `/metrics` HTTP endpoint for Prometheus to scrape.
+
+It's one consumer of [`libprobeme`](https://github.com/xXLegionBinFrogXx/libprobeme):
+it loads `libprobeme_*.so` providers, ticks `collect_all` on an interval, and
+exposes the results as `node_*` / `DCGM_FI_DEV_*` / `pme_*` series on `/metrics`.
 
 ## Metrics
 
